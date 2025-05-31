@@ -98,6 +98,10 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="Song" asp-action="Index">Songs</a>
                         </li>
+                        <form class="d-flex ms-auto" asp-controller="Home" asp-action="Search" method="get">
+                            <input class="form-control me-2" type="search" name="query" placeholder="Поиск..." aria-label="Search">
+                            <button class="btn btn-outline-success" type="submit">Искать</button>
+                        </form>
                     </ul>
                 </div>
             </div>
