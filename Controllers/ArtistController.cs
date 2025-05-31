@@ -6,12 +6,26 @@ namespace Music.Controllers;
 
 public class ArtistController(IArtistRepository artistRepository) : Controller
 {
-    // Отображение списка артистов
-    public async Task<IActionResult> Index()
+    private const int PageSize = 5;
+
+    public async Task<IActionResult> Index(int page = 1)
     {
         var artists = await artistRepository.GetAllAsync();
-        return View(artists);
+        var totalItems = artists.Count;
+
+        var pagination = new PaginationViewModel
+        {
+            PageNumber = page,
+            PageSize = PageSize,
+            TotalItems = totalItems
+        };
+
+        var artistsOnPage = artists.Skip((page - 1) * PageSize).Take(PageSize).ToList();
+
+        ViewBag.Pagination = pagination;
+        return View(artistsOnPage);
     }
+
 
     // Форма создания артиста
     public IActionResult Create()
@@ -23,11 +37,12 @@ public class ArtistController(IArtistRepository artistRepository) : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(Artist artist)
     {
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
             await artistRepository.AddAsync(artist);
             return RedirectToAction(nameof(Index));
         }
+
         return View(artist);
     }
 
@@ -44,11 +59,12 @@ public class ArtistController(IArtistRepository artistRepository) : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(Artist artist)
     {
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
             await artistRepository.UpdateAsync(artist);
             return RedirectToAction(nameof(Index));
         }
+
         return View(artist);
     }
 
@@ -67,5 +83,24 @@ public class ArtistController(IArtistRepository artistRepository) : Controller
     {
         await artistRepository.DeleteAsync(id);
         return RedirectToAction(nameof(Index));
+    }
+
+    public async Task<IActionResult> Details(int id)
+    {
+        var artist = await artistRepository.GetByIdWithAlbumsAndSongsAsync(id);
+        if (artist == null)
+            return NotFound();
+
+        var songs = artist.Albums
+            .Where(a => a.Songs != null)
+            .SelectMany(a => a.Songs)
+            .ToList();
+
+        var random = new Random();
+        var randomSongs = songs.OrderBy(s => random.Next()).Take(5).ToList();
+
+        ViewBag.RandomSongs = randomSongs;
+
+        return View(artist);
     }
 }

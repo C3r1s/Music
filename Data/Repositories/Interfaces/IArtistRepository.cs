@@ -9,4 +9,5 @@ public interface IArtistRepository
     Task AddAsync(Artist artist);
     Task UpdateAsync(Artist artist);
     Task DeleteAsync(int id);
+    Task<Artist> GetByIdWithAlbumsAndSongsAsync(int id);
 }

@@ -13,7 +13,9 @@ public class HomeController(MusicDbContext context) : Controller
         return View(artists);
     }
 
-    public async Task<IActionResult> Search(string query)
+    private const int PageSize = 5;
+
+    public async Task<IActionResult> Search(string query, int page = 1)
     {
         if (string.IsNullOrWhiteSpace(query))
             return RedirectToAction(nameof(Index));
@@ -34,15 +36,26 @@ public class HomeController(MusicDbContext context) : Controller
             .AsNoTracking()
             .ToListAsync();
 
+        // Пагинация
+        var totalArtists = artists.Count;
+        var totalAlbums = albums.Count;
+        var totalSongs = songs.Count;
+
         var model = new SearchViewModel
         {
             Query = query,
-            Artists = artists,
-            Albums = albums,
-            Songs = songs
+            Artists = artists.Skip((page - 1) * PageSize).Take(PageSize).ToList(),
+            Albums = albums.Skip((page - 1) * PageSize).Take(PageSize).ToList(),
+            Songs = songs.Skip((page - 1) * PageSize).Take(PageSize).ToList()
+        };
+
+        ViewBag.Pagination = new PaginationViewModel
+        {
+            PageNumber = page,
+            PageSize = PageSize,
+            TotalItems = Math.Max(Math.Max(totalArtists, totalAlbums), totalSongs)
         };
 
         return View(model);
     }
 }
-

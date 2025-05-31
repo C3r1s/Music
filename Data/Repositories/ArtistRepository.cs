@@ -33,4 +33,12 @@ public class ArtistRepository(MusicDbContext context) : IArtistRepository
             await context.SaveChangesAsync();
         }
     }
+
+    public async Task<Artist> GetByIdWithAlbumsAndSongsAsync(int id)
+    {
+        return await context.Artists
+            .Include(a => a.Albums)
+            .ThenInclude(album => album.Songs)
+            .FirstOrDefaultAsync(a => a.Id == id);
+    }
 }

@@ -12,7 +12,8 @@
                     <img src="@artist.UrlImg" class="card-img-top" alt="...">
                     <div class="card-body">
                         <h5 class="card-title">@artist.Name</h5>
-                        <a href="#" class="btn btn-primary">Перейти</a>
+                        <a asp-controller="Artist" asp-action="Details" asp-route-id="@artist.Id" class="btn btn-primary">Перейти</a>
+
                     </div>
                 </div>
             </div>
