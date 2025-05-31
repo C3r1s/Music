@@ -6,6 +6,31 @@ namespace Music.Data.Repositories;
 
 public class ArtistRepository(MusicDbContext context) : IArtistRepository
 {
-    public async Task<List<Artist>> GetAllAsync() => await context.Artists.AsNoTracking().ToListAsync();
-    
+    public async Task<List<Artist>> GetAllAsync()
+        => await context.Artists.AsNoTracking().ToListAsync();
+
+    public async Task<Artist> GetByIdAsync(int id)
+        => await context.Artists.AsNoTracking().FirstOrDefaultAsync(a => a.Id == id);
+
+    public async Task AddAsync(Artist artist)
+    {
+        context.Artists.Add(artist);
+        await context.SaveChangesAsync();
+    }
+
+    public async Task UpdateAsync(Artist artist)
+    {
+        context.Artists.Update(artist);
+        await context.SaveChangesAsync();
+    }
+
+    public async Task DeleteAsync(int id)
+    {
+        var artist = await context.Artists.FindAsync(id);
+        if (artist != null)
+        {
+            context.Artists.Remove(artist);
+            await context.SaveChangesAsync();
+        }
+    }
 }
