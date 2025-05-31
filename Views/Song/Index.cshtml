@@ -1,0 +1,43 @@
+﻿@model Album
+
+<!-- Шапка альбома -->
+<div class="album-header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-3 text-center text-md-start">
+                <img src="@Model.UrlImg"
+                     alt="Обложка альбома"
+                     class="img-fluid rounded album-cover">
+            </div>
+            <div class="col-md-9 mt-4 mt-md-0">
+                <h1>@Model.Name</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Основное содержимое -->
+<div class="container">
+    <div class="row">
+        <!-- Список треков -->
+        <div class="col-lg-8">
+            <h2 class="mb-4">Песни</h2>
+
+            <div class="track-list">
+                @foreach (var song in Model.Songs)
+                {
+                    <div class="track-item">
+                        <div class="track-number">1</div>
+                        <div class="track-info">
+                            <h6 class="mb-0">@song.Name</h6>
+                        </div>
+                        <audio controls class="audio-player">
+                            <source src="@song.UrlSong" type="audio/mpeg">
+                            Ваш браузер не поддерживает аудио элемент.
+                        </audio>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
