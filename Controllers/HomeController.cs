@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Music.Data.Repositories;
@@ -5,6 +6,7 @@ using Music.Models;
 
 namespace Music.Controllers;
 
+[Authorize]
 public class HomeController(MusicDbContext context) : Controller
 {
     public async Task<IActionResult> Index()
@@ -36,7 +38,6 @@ public class HomeController(MusicDbContext context) : Controller
             .AsNoTracking()
             .ToListAsync();
 
-        // Пагинация
         var totalArtists = artists.Count;
         var totalAlbums = albums.Count;
         var totalSongs = songs.Count;

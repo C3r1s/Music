@@ -16,9 +16,9 @@ public class AlbumRepositoryAdo(MusicDbContext context) : IAlbumRepository
     public async Task<Album> GetDetailsByIdAsync(int id)
     {
         var album = await context.Albums
-                            .AsNoTracking()
-                            .Include(album => album.Songs)
-                            .FirstAsync(x => x.Id == id);
+            .AsNoTracking()
+            .Include(album => album.Songs)
+            .FirstAsync(x => x.Id == id);
 
         return album;
     }

@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Music.Data.Repositories.Interfaces;
 using Music.Models;
 
 namespace Music.Controllers;
 
+[Authorize]
 public class ArtistController(IArtistRepository artistRepository) : Controller
 {
     private const int PageSize = 5;
@@ -27,7 +29,6 @@ public class ArtistController(IArtistRepository artistRepository) : Controller
     }
 
 
-    // Форма создания артиста
     public IActionResult Create()
     {
         return View();
@@ -46,7 +47,6 @@ public class ArtistController(IArtistRepository artistRepository) : Controller
         return View(artist);
     }
 
-    // Форма редактирования артиста
     public async Task<IActionResult> Edit(int id)
     {
         var artist = await artistRepository.GetByIdAsync(id);
@@ -68,7 +68,6 @@ public class ArtistController(IArtistRepository artistRepository) : Controller
         return View(artist);
     }
 
-    // Удаление артиста
     public async Task<IActionResult> Delete(int id)
     {
         var artist = await artistRepository.GetByIdAsync(id);

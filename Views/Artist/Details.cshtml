@@ -1,5 +1,10 @@
 ﻿@model Artist
 
+<form asp-controller="Favourites" asp-action="AddArtist" method="post">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <button type="submit" class="btn btn-success">Добавить в избранное</button>
+</form>
+
 <div class="container py-4">
     <div class="card mb-4">
         <div class="row g-0">
@@ -14,7 +19,6 @@
         </div>
     </div>
 
-    <!-- Случайные песни -->
     @if (ViewBag.RandomSongs != null && ((List<Song>)ViewBag.RandomSongs).Any())
     {
         <h4>Случайные песни</h4>
@@ -36,7 +40,6 @@
         </div>
     }
 
-    <!-- Альбомы -->
     @if (Model.Albums.Any())
     {
         <h4>Альбомы</h4>

@@ -15,4 +15,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Favourites\Index.cshtml" />
+  </ItemGroup>
+
 </Project>

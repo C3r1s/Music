@@ -1,5 +1,21 @@
 ﻿@model Album
 
+@if ((bool)ViewBag.IsInFavourites)
+{
+    <form asp-controller="Favourites" asp-action="RemoveAlbum" method="post">
+        <input type="hidden" name="id" value="@Model.Id"/>
+        <button type="submit" class="btn btn-danger">Удалить из избранного</button>
+    </form>
+}
+else
+{
+    <form asp-controller="Favourites" asp-action="AddAlbum" method="post">
+        <input type="hidden" name="id" value="@Model.Id"/>
+        <button type="submit" class="btn btn-success">Добавить в избранное</button>
+    </form>
+}
+
+
 <div class="album-header">
     <div class="container">
         <div class="row align-items-center">

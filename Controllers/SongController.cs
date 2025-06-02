@@ -1,17 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Music.Data.Repositories;
 using Music.Models;
 
 namespace Music.Controllers;
 
+[Authorize]
 public class SongController(MusicDbContext context) : Controller
 {
     private const int PageSize = 5;
 
     public async Task<IActionResult> Index(int albumId, int page = 1)
     {
-        
         var album = await context.Albums
             .AsNoTracking()
             .Include(a => a.Songs)

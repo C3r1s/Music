@@ -1,6 +1,5 @@
 ﻿namespace Music.Models;
 
-
 public class PaginationViewModel
 {
     public int PageNumber { get; set; }

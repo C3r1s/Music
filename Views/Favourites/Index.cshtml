@@ -1,0 +1,77 @@
+﻿@model FavouritesViewModel
+
+<h2>Избранные элементы</h2>
+
+@if (Model.Artists.Any())
+{
+    <h4>Артисты</h4>
+    <div class="row mb-4">
+        @foreach (var artist in Model.Artists)
+        {
+            <div class="col-md-4 col-lg-3">
+                <div class="card album-card">
+                    <img src="@artist.UrlImg" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">@artist.Name</h5>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@if (Model.Albums.Any())
+{
+    <h4>Альбомы</h4>
+    <div class="row mb-4">
+        @foreach (var album in Model.Albums)
+        {
+            <div class="col-md-4 col-lg-3">
+                <div class="card album-card">
+                    <img src="@album.UrlImg" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">@album.Name</h5>
+
+                        <a asp-controller="Album" asp-action="Details" asp-route-id="@album.Id" class="btn btn-primary">Подробнее</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+
+@if (Model.Songs.Any())
+{
+    <h4>Песни</h4>
+    <div class="row mb-4">
+        @foreach (var song in Model.Songs)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@song.Name</h5>
+                        <audio controls class="w-100">
+                            <source src="@song.UrlSong" type="audio/mpeg">
+                            Ваш браузер не поддерживает аудио элемент.
+                        </audio>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@if (ViewBag.Pagination.TotalPages > 1)
+{
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            @for (int i = 1; i <= ViewBag.Pagination.TotalPages; i++)
+            {
+                <li class="page-item @(i == ViewBag.Pagination.PageNumber ? "active" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-page="@i">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}
