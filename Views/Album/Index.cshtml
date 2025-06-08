@@ -10,7 +10,25 @@
                     <img src="@album.UrlImg" class="card-img-top" alt="...">
                     <div class="card-body">
                         <h5 class="card-title">@album.Name</h5>
-                        <a asp-controller="Album" asp-action="Details" asp-route-name="@album.Name" asp-route-id="@album.Id" class="btn btn-primary">Перейти</a>
+
+                        @if (ViewBag.FavouriteAlbumIds != null && ((List<int>)ViewBag.FavouriteAlbumIds).Contains(album.Id))
+                        {
+                            <form asp-controller="Favourites" asp-action="RemoveAlbum" method="post">
+                                <input type="hidden" name="id" value="@album.Id"/>
+                                <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                <button type="submit" class="btn btn-danger btn-sm">Удалить из избранного</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <form asp-controller="Favourites" asp-action="AddAlbum" method="post">
+                                <input type="hidden" name="id" value="@album.Id"/>
+                                <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                <button type="submit" class="btn btn-success btn-sm">Добавить в избранное</button>
+                            </form>
+                        }
+                        <a asp-controller="Album" asp-action="Details" asp-route-name="@album.Name"
+                           asp-route-id="@album.Id" class="btn btn-primary">Перейти</a>
                     </div>
                 </div>
             </div>

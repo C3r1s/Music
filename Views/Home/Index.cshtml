@@ -12,6 +12,22 @@
                     <img src="@artist.UrlImg" class="card-img-top" alt="...">
                     <div class="card-body">
                         <h5 class="card-title">@artist.Name</h5>
+                        @if (ViewBag.FavouriteArtistIds != null && ((List<int>)ViewBag.FavouriteArtistIds).Contains(artist.Id))
+                        {
+                            <form asp-controller="Favourites" asp-action="RemoveArtist" method="post">
+                                <input type="hidden" name="id" value="@artist.Id"/>
+                                <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                <button type="submit" class="btn btn-danger btn-sm">Удалить из избранного</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <form asp-controller="Favourites" asp-action="AddArtist" method="post">
+                                <input type="hidden" name="id" value="@artist.Id"/>
+                                <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                <button type="submit" class="btn btn-success btn-sm">Добавить в избранное</button>
+                            </form>
+                        }
                         <a asp-controller="Artist" asp-action="Details" asp-route-id="@artist.Id" class="btn btn-primary">Перейти</a>
 
                     </div>

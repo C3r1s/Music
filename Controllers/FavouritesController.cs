@@ -40,20 +40,21 @@ public class FavouritesController(IFavouriteRepository favouriteRepository)
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddArtist(int id)
+    public async Task<IActionResult> AddArtist(int id, string returnUrl)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         await favouriteRepository.AddArtistToFavourites(int.Parse(userId), id);
-        return RedirectToAction("Index");
+        return Redirect(returnUrl ?? "/");
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddAlbum(int id)
+    public async Task<IActionResult> AddAlbum(int id, string returnUrl)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         await favouriteRepository.AddAlbumToFavourites(int.Parse(userId), id);
-        return RedirectToAction("Index");
+        return Redirect(returnUrl ?? "/");
+        
     }
 
     [HttpPost]
@@ -71,11 +72,20 @@ public class FavouritesController(IFavouriteRepository favouriteRepository)
     }
 
     [HttpPost]
-    public async Task<IActionResult> RemoveAlbum(int id)
+    public async Task<IActionResult> RemoveAlbum(int id, string returnUrl)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         await favouriteRepository.RemoveAlbumFromFavourites(int.Parse(userId), id);
-        return RedirectToAction("Details", "Album", new { id });
+        return Redirect(returnUrl ?? "/");
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> RemoveArtist(int id, string returnUrl)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        await favouriteRepository.RemoveArtistFromFavourites(int.Parse(userId), id);
+        return Redirect(returnUrl ?? "/");
     }
 }

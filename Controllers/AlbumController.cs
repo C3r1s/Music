@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Music.Data.Repositories.Interfaces;
 using Music.Models.Viewmodels;
+using System.Linq;
 
 namespace Music.Controllers;
 
@@ -29,9 +30,22 @@ public class AlbumController(
 
         var albumsOnPage = albums.Paginate(page, PageSize).ToList();
 
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        List<int> favouriteAlbumIds = [];
+
+        if (!string.IsNullOrEmpty(userId))
+        {
+            favouriteAlbumIds = (await favouriteRepository.GetFavouriteAlbums(int.Parse(userId)))
+                .Select(a => a.Id)
+                .ToList();
+        }
+        ViewBag.FavouriteAlbumIds = favouriteAlbumIds;
         ViewBag.Pagination = pagination;
+
         return View(albumsOnPage);
     }
+
 
     public async Task<IActionResult> Details(int id, string name)
     {

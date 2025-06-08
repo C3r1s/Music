@@ -1,16 +1,31 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Music.Data.Repositories;
+using Music.Data.Repositories.Interfaces;
 using Music.Models.Viewmodels;
+
 namespace Music.Controllers;
 
 [Authorize]
-public class HomeController(MusicDbContext context) : Controller
+public class HomeController(MusicDbContext context, IFavouriteRepository favouriteRepository) : Controller
 {
     public async Task<IActionResult> Index()
     {
         var artists = await context.Artists.AsNoTracking().ToListAsync();
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        List<int> favouriteArtistsIds = [];
+
+        if (!string.IsNullOrEmpty(userId))
+        {
+            favouriteArtistsIds = (await favouriteRepository.GetFavouriteArtists(int.Parse(userId)))
+                .Select(a => a.Id)
+                .ToList();
+        }
+
+        ViewBag.FavouriteArtistIds = favouriteArtistsIds;
         return View(artists);
     }
 
