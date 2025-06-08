@@ -1,4 +1,4 @@
-﻿namespace Music.Models;
+﻿namespace Music.Models.Viewmodels;
 
 public class PaginationViewModel
 {

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Music.Data.Repositories.Interfaces;
 using Music.Models;
+using Music.Models.Viewmodels;
 
 namespace Music.Controllers;
 
@@ -23,9 +24,9 @@ public class FavouritesController(IFavouriteRepository favouriteRepository)
 
         var model = new FavouritesViewModel
         {
-            Artists = artists.Skip((page - 1) * PageSize).Take(PageSize).ToList(),
-            Albums = albums.Skip((page - 1) * PageSize).Take(PageSize).ToList(),
-            Songs = songs.Skip((page - 1) * PageSize).Take(PageSize).ToList()
+            Artists = artists.Paginate(page, PageSize).ToList(),
+            Albums = albums.Paginate(page, PageSize).ToList(),
+            Songs = songs.Paginate(page, PageSize).ToList()
         };
 
         ViewBag.Pagination = new PaginationViewModel

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Music.Data.Repositories;
 using Music.Models;
+using Music.Models.Viewmodels;
 
 namespace Music.Controllers;
 

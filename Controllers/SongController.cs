@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Music.Data.Repositories;
-using Music.Models;
+using Music.Models.Viewmodels;
 
 namespace Music.Controllers;
 
@@ -22,7 +22,7 @@ public class SongController(MusicDbContext context) : Controller
             return NotFound();
 
         var totalSongs = album.Songs.Count;
-        var songsOnPage = album.Songs.Skip((page - 1) * PageSize).Take(PageSize).ToList();
+        var songsOnPage = album.Songs.Paginate(page, PageSize).ToList();
 
         var pagination = new PaginationViewModel
         {

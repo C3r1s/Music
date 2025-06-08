@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Music.Data.Repositories.Interfaces;
 using Music.Models;
+using Music.Models.Viewmodels;
 
 namespace Music.Controllers;
 
@@ -22,7 +23,7 @@ public class ArtistController(IArtistRepository artistRepository) : Controller
             TotalItems = totalItems
         };
 
-        var artistsOnPage = artists.Skip((page - 1) * PageSize).Take(PageSize).ToList();
+        var artistsOnPage = artists.Paginate(page, PageSize).ToList();
 
         ViewBag.Pagination = pagination;
         return View(artistsOnPage);
