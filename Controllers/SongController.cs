@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Music.Data.Repositories;
+using Music.Extensions;
 using Music.Models.Viewmodels;
 
 namespace Music.Controllers;

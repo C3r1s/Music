@@ -1,7 +1,4 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Mvc;
-using Music.Data.Repositories.Interfaces;
-using Music.Models.Viewmodels;
+﻿namespace Music.Extensions;
 
 public static class PaginationExtensions
 {

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Music.Data.Repositories.Interfaces;
-using Music.Models;
+using Music.Extensions;
 using Music.Models.Viewmodels;
 
 namespace Music.Controllers;
@@ -54,7 +54,6 @@ public class FavouritesController(IFavouriteRepository favouriteRepository)
 
         await favouriteRepository.AddAlbumToFavourites(int.Parse(userId), id);
         return Redirect(returnUrl ?? "/");
-        
     }
 
     [HttpPost]
@@ -79,7 +78,7 @@ public class FavouritesController(IFavouriteRepository favouriteRepository)
         await favouriteRepository.RemoveAlbumFromFavourites(int.Parse(userId), id);
         return Redirect(returnUrl ?? "/");
     }
-    
+
     [HttpPost]
     public async Task<IActionResult> RemoveArtist(int id, string returnUrl)
     {

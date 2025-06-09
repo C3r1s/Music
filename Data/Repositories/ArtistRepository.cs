@@ -7,10 +7,14 @@ namespace Music.Data.Repositories;
 public class ArtistRepository(MusicDbContext context) : IArtistRepository
 {
     public async Task<List<Artist>> GetAllAsync()
-        => await context.Artists.AsNoTracking().ToListAsync();
+    {
+        return await context.Artists.AsNoTracking().ToListAsync();
+    }
 
     public async Task<Artist> GetByIdAsync(int id)
-        => await context.Artists.AsNoTracking().FirstOrDefaultAsync(a => a.Id == id);
+    {
+        return await context.Artists.AsNoTracking().FirstOrDefaultAsync(a => a.Id == id);
+    }
 
     public async Task AddAsync(Artist artist)
     {
@@ -40,5 +44,13 @@ public class ArtistRepository(MusicDbContext context) : IArtistRepository
             .Include(a => a.Albums)
             .ThenInclude(album => album.Songs)
             .FirstOrDefaultAsync(a => a.Id == id);
+    }
+
+    public async Task<List<Artist>> GetAllByQueryAsync(string query)
+    {
+        return await context.Artists
+            .Where(a => a.Name.Contains(query))
+            .AsNoTracking()
+            .ToListAsync();
     }
 }

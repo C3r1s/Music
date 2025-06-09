@@ -29,8 +29,8 @@ var app = builder.Build();
 app.UseAuthentication();
 
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    "default",
+    "{controller=Home}/{action=Index}/{id?}");
 
 app.UseAuthorization();
 app.Run();

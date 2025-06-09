@@ -9,7 +9,8 @@
                     <img src="@artist.UrlImg" class="card-img-top" alt="...">
                     <div class="card-body">
                         <h5 class="card-title">@artist.Name</h5>
-                        <a asp-controller="Artist" asp-action="Details" asp-route-id="@artist.Id" class="btn btn-primary">Подробнее</a>
+                        <a asp-controller="Artist" asp-action="Details" asp-route-id="@artist.Id"
+                           class="btn btn-primary">Подробнее</a>
                     </div>
                 </div>
             </div>
@@ -66,7 +67,7 @@
 {
     <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">
-            @for (int i = 1; i <= ViewBag.Pagination.TotalPages; i++)
+            @for (var i = 1; i <= ViewBag.Pagination.TotalPages; i++)
             {
                 <li class="page-item @(i == ViewBag.Pagination.PageNumber ? "active" : "")">
                     <a class="page-link" asp-action="Search" asp-route-query="@Model.Query" asp-route-page="@i">@i</a>

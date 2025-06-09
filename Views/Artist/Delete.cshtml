@@ -1,7 +1,7 @@
 ﻿@model Artist
 <h3>Вы уверены, что хотите удалить артиста "@Model.Name"?</h3>
 <form asp-action="Delete" method="post">
-    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="Id"/>
     @Html.AntiForgeryToken()
     <button type="submit" class="btn btn-danger">Удалить</button>
     <a asp-action="Index" class="btn btn-secondary">Отмена</a>

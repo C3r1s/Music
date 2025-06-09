@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Music.Data.Repositories.Interfaces;
+using Music.Extensions;
 using Music.Models.Viewmodels;
-using System.Linq;
 
 namespace Music.Controllers;
 
@@ -35,11 +35,9 @@ public class AlbumController(
         List<int> favouriteAlbumIds = [];
 
         if (!string.IsNullOrEmpty(userId))
-        {
             favouriteAlbumIds = (await favouriteRepository.GetFavouriteAlbums(int.Parse(userId)))
                 .Select(a => a.Id)
                 .ToList();
-        }
         ViewBag.FavouriteAlbumIds = favouriteAlbumIds;
         ViewBag.Pagination = pagination;
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Music.Data.Repositories.Interfaces;
+using Music.Extensions;
 using Music.Models;
 using Music.Models.Viewmodels;
 
@@ -77,7 +78,8 @@ public class ArtistController(IArtistRepository artistRepository) : Controller
         return View(artist);
     }
 
-    [HttpPost, ActionName("Delete")]
+    [HttpPost]
+    [ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {

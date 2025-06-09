@@ -22,4 +22,12 @@ public class AlbumRepositoryAdo(MusicDbContext context) : IAlbumRepository
 
         return album;
     }
+
+    public async Task<List<Album>> GetAllByQueryAsync(string query)
+    {
+        return await context.Albums
+            .Where(a => a.Name.Contains(query))
+            .AsNoTracking()
+            .Include(a => a.Songs)
+            .ToListAsync();    }
 }
