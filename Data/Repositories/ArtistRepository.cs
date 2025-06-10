@@ -46,11 +46,18 @@ public class ArtistRepository(MusicDbContext context) : IArtistRepository
             .FirstOrDefaultAsync(a => a.Id == id);
     }
 
-    public async Task<List<Artist>> GetAllByQueryAsync(string query)
+    public async Task<int> GetCountByQueryAsync(string query)
+    {
+        return await context.Artists.Where(a => a.Name.Contains(query)).CountAsync();
+    }
+
+    public async Task<List<Artist>> GetAllByQueryAsync(string query, int skip, int take)
     {
         return await context.Artists
             .Where(a => a.Name.Contains(query))
             .AsNoTracking()
+            .Skip(skip)
+            .Take(take)
             .ToListAsync();
     }
 }

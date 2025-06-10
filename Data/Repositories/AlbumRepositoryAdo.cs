@@ -6,13 +6,16 @@ namespace Music.Data.Repositories;
 
 public class AlbumRepositoryAdo(MusicDbContext context) : IAlbumRepository
 {
-    public async Task<List<Album>> GetAllAsync()
+    public async Task<List<Album>> GetAllPagedAsync(int skip, int take)
     {
-        var albums = await context.Albums.AsNoTracking().ToListAsync();
-
-        return albums;
+        return await context.Albums
+            .AsNoTracking()
+            .Include(a => a.Songs)
+            .Skip(skip)
+            .Take(take)
+            .ToListAsync();
     }
-
+    public async Task<int> GetCountAsync() => await context.Albums.CountAsync();
     public async Task<Album> GetDetailsByIdAsync(int id)
     {
         var album = await context.Albums
@@ -23,11 +26,14 @@ public class AlbumRepositoryAdo(MusicDbContext context) : IAlbumRepository
         return album;
     }
 
-    public async Task<List<Album>> GetAllByQueryAsync(string query)
+    public async Task<List<Album>> GetAllByQueryAsync(string query, int skip, int take)
     {
         return await context.Albums
             .Where(a => a.Name.Contains(query))
             .AsNoTracking()
             .Include(a => a.Songs)
-            .ToListAsync();    }
+            .Skip(skip)
+            .Take(take)
+            .ToListAsync();
+    }
 }

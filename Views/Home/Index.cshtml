@@ -1,18 +1,18 @@
-﻿@model List<Artist>
+﻿ @model HomeIndexViewModel
 
 <div class="container py-5">
     <h1 class="text-center mb-5">Популярные Артисты</h1>
 
     <div class="row">
 
-        @foreach (var artist in Model)
+        @foreach (var artist in Model.Artists)
         {
             <div class="col-md-4 col-lg-3">
                 <div class="card album-card">
                     <img src="@artist.UrlImg" class="card-img-top" alt="...">
                     <div class="card-body">
                         <h5 class="card-title">@artist.Name</h5>
-                        @if (ViewBag.FavouriteArtistIds != null && ((List<int>)ViewBag.FavouriteArtistIds).Contains(artist.Id))
+                        @if (Model.FavouriteArtistIds.Contains(artist.Id))
                         {
                             <form asp-controller="Favourites" asp-action="RemoveArtist" method="post">
                                 <input type="hidden" name="id" value="@artist.Id"/>

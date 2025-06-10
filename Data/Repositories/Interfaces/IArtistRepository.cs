@@ -10,5 +10,6 @@ public interface IArtistRepository
     Task UpdateAsync(Artist artist);
     Task DeleteAsync(int id);
     Task<Artist> GetByIdWithAlbumsAndSongsAsync(int id);
-    Task<List<Artist>> GetAllByQueryAsync(string query);
+    Task<int> GetCountByQueryAsync(string query);
+    Task<List<Artist>> GetAllByQueryAsync(string query, int skip, int take);
 }

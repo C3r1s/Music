@@ -1,10 +1,10 @@
-﻿@model List<Artist>
+﻿@model ArtistIndexViewModel
 
 <div class="container py-5">
     <h1 class="text-center mb-5">Популярные Артисты</h1>
 
     <div class="row">
-        @foreach (var artist in Model)
+        @foreach (var artist in Model.Artists)
         {
             <div class="col-md-4 col-lg-3">
                 <div class="card album-card">
@@ -19,19 +19,7 @@
         }
     </div>
 
-    @if (ViewBag.Pagination.TotalPages > 1)
-    {
-        <nav aria-label="Page navigation">
-            <ul class="pagination justify-content-center">
-                @for (var i = 1; i <= ViewBag.Pagination.TotalPages; i++)
-                {
-                    <li class="page-item @(i == ViewBag.Pagination.PageNumber ? "active" : "")">
-                        <a class="page-link" asp-action="Index" asp-route-page="@i">@i</a>
-                    </li>
-                }
-            </ul>
-        </nav>
-    }
+    <partial name="_Pagination" model="Model.Pagination" />
 
     <a asp-action="Create" class="btn btn-primary mt-4">Добавить нового артиста</a>
 </div>

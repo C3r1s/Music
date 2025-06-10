@@ -9,11 +9,8 @@ public interface IFavouriteRepository
 
     Task AddAlbumToFavourites(int userId, int albumId);
     Task RemoveAlbumFromFavourites(int userId, int albumId);
-
-    Task AddSongToFavourites(int userId, int songId);
-    Task RemoveSongFromFavourites(int userId, int songId);
-
     Task<List<Artist>> GetFavouriteArtists(int userId);
+    Task<HashSet<int>> GetFavouriteAlbumsIds(int userId);
     Task<List<Album>> GetFavouriteAlbums(int userId);
     Task<List<Song>> GetFavouriteSongs(int userId);
 

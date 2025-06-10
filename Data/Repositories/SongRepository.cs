@@ -1,24 +1,39 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Music.Data.Repositories.Interfaces;
+using Music.Extensions;
 using Music.Models;
 
 namespace Music.Data.Repositories;
 
 public class SongRepository(MusicDbContext context) : ISongRepository
 {
-    public async Task<Album> GetAlbumWithSongsByIdAsync(int albumId)
-    {
-        return (await context.Albums
-            .AsNoTracking()
-            .Include(a => a.Songs)
-            .FirstOrDefaultAsync(a => a.Id == albumId))!;
-    }
-    
     public async Task<List<Song>> GetAllByQueryAsync(string query)
     {
         return await context.Songs
             .Where(s => s.Name.Contains(query))
             .AsNoTracking()
             .ToListAsync();
+    }
+
+    public async Task<Album> GetSongsByAlbumIdAsync(int albumId, int skip, int take)
+    {
+        var album = await context.Albums
+            .AsNoTracking()
+            .Include(a => a.Songs)
+            .FirstOrDefaultAsync(a => a.Id == albumId);
+
+        if (album == null)
+            throw new KeyNotFoundException("Альбом не найден");
+
+        album.Songs = album.Songs.Paginate(skip, take).ToList();
+        return album;
+    }
+
+    public async Task<int> GetSongCountByAlbumIdAsync(int albumId)
+    {
+        return await context.Albums
+            .Where(a => a.Id == albumId)
+            .Select(a => a.Songs.Count)
+            .FirstOrDefaultAsync();
     }
 }

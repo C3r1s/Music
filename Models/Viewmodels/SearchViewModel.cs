@@ -7,5 +7,5 @@ public class SearchViewModel
     public List<Album> Albums { get; set; } = [];
     public List<Song> Songs { get; set; } = [];
     
-    public PaginationViewModel PaginationViewModel { get; init; }
+    public PaginationViewModel Pagination { get; set; }
 }

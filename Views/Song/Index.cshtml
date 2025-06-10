@@ -1,15 +1,15 @@
-﻿@model Album
+﻿@model SongIndexViewModel
 
 <div class="album-header">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-md-3 text-center text-md-start">
-                <img src="@Model.UrlImg"
+                <img src="@Model.Album.UrlImg"
                      alt="Обложка альбома"
                      class="img-fluid rounded album-cover">
             </div>
             <div class="col-md-9 mt-4 mt-md-0">
-                <h1>@Model.Name</h1>
+                <h1>@Model.Album.Name</h1>
             </div>
         </div>
     </div>
@@ -21,7 +21,7 @@
             <h2 class="mb-4">Песни</h2>
 
             <div class="track-list">
-                @foreach (var song in Model.Songs)
+                @foreach (var song in Model.Album.Songs)
                 {
                     <div class="track-item">
                         <div class="track-number">1</div>
@@ -35,20 +35,7 @@
                     </div>
                 }
             </div>
-            if (ViewBag.Pagination.TotalPages > 1)
-            {
-            <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-center">
-                    @for (var i = 1; i <= ViewBag.Pagination.TotalPages; i++)
-                    {
-                        <li class="page-item @(i == ViewBag.Pagination.PageNumber ? "active" : "")">
-                            <a class="page-link" asp-action="Index" asp-route-albumId="@ViewBag.AlbumId"
-                               asp-route-page="@i">@i</a>
-                        </li>
-                    }
-                </ul>
-            </nav>
-            }
+            <partial name="_Pagination" model="Model.Pagination" />
         </div>
     </div>
 </div>

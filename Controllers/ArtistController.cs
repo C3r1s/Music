@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Music.Data.Repositories.Interfaces;
-using Music.Extensions;
 using Music.Models;
 using Music.Models.Viewmodels;
 
@@ -12,22 +11,23 @@ public class ArtistController(IArtistRepository artistRepository) : Controller
 {
     private const int PageSize = 5;
 
-    public async Task<IActionResult> Index(int page = 1)
+    public async Task<IActionResult> Index(int page = 1, string query = "")
     {
-        var artists = await artistRepository.GetAllAsync();
-        var totalItems = artists.Count;
+        var totalItems = await artistRepository.GetCountByQueryAsync(query);
+        var artistsOnPage = await artistRepository.GetAllByQueryAsync(query, (page - 1) * PageSize, PageSize);
 
-        var pagination = new PaginationViewModel
+        var model = new ArtistIndexViewModel
         {
-            PageNumber = page,
-            PageSize = PageSize,
-            TotalItems = totalItems
+            Artists = artistsOnPage,
+            Pagination = new PaginationViewModel
+            {
+                PageNumber = page,
+                PageSize = PageSize,
+                TotalItems = totalItems
+            },
+            Query = query
         };
-
-        var artistsOnPage = artists.Paginate(page, PageSize).ToList();
-
-        ViewBag.Pagination = pagination;
-        return View(artistsOnPage);
+        return View(model);
     }
 
 
@@ -99,10 +99,16 @@ public class ArtistController(IArtistRepository artistRepository) : Controller
             .ToList();
 
         var random = new Random();
-        var randomSongs = songs.OrderBy(s => random.Next()).Take(5).ToList();
+        var randomSongs = new HashSet<Song>();
+
+        var shuffledSongs = songs.OrderBy(s => random.Next()).ToList();
+
+        foreach (var song in shuffledSongs.Take(5))
+        {
+            randomSongs.Add(song);
+        }
 
         ViewBag.RandomSongs = randomSongs;
-
         return View(artist);
     }
 }

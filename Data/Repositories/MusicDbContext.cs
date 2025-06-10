@@ -25,5 +25,11 @@ public class MusicDbContext(DbContextOptions<MusicDbContext> options) : DbContex
 
         modelBuilder.Entity<UserSong>()
             .HasKey(us => new { us.UserId, us.SongId });
+
+        modelBuilder.Entity<Artist>()
+            .HasMany(a => a.Albums)
+            .WithOne()
+            .HasForeignKey("ArtistId") // Правильный внешний ключ
+            .OnDelete(DeleteBehavior.Cascade); // Каскадное удаление
     }
 }

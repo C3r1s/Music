@@ -4,7 +4,7 @@ namespace Music.Data.Repositories.Interfaces;
 
 public interface ISongRepository
 {
-    Task<Album> GetAlbumWithSongsByIdAsync(int albumId);
-    
     Task<List<Song>> GetAllByQueryAsync(string query);
+    Task<Album> GetSongsByAlbumIdAsync(int albumId, int pageSize, int i);
+    Task<int> GetSongCountByAlbumIdAsync(int albumId);
 }

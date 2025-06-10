@@ -1,8 +1,5 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Music.Data.Repositories;
 using Music.Data.Repositories.Interfaces;
 using Music.Extensions;
 using Music.Models.Viewmodels;
@@ -21,28 +18,32 @@ public class HomeController(
     public async Task<IActionResult> Index()
     {
         var artists = await artistRepository.GetAllAsync();
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var userId = User.GetUserId();
 
-        List<int> favouriteArtistsIds = [];
+        HashSet<int> favouriteArtistsIds = [];
 
-        if (!string.IsNullOrEmpty(userId))
-            favouriteArtistsIds = (await favouriteRepository.GetFavouriteArtists(int.Parse(userId)))
-                .Select(a => a.Id)
-                .ToList();
+        if (userId != 0)
+        {
+            favouriteArtistsIds = (await favouriteRepository.GetFavouriteArtists(userId))
+                .Select(a => a.Id).ToHashSet();
+        }
+        var model = new HomeIndexViewModel
+        {
+            Artists = artists,
+            FavouriteArtistIds = favouriteArtistsIds
+        };
 
-        ViewBag.FavouriteArtistIds = favouriteArtistsIds;
-        return View(artists);
+        return View(model);
     }
+
 
     public async Task<IActionResult> Search(string query, int page = 1)
     {
         if (string.IsNullOrWhiteSpace(query))
             return RedirectToAction(nameof(Index));
 
-        var artists = await artistRepository.GetAllByQueryAsync(query);
-
-        var albums = await albumRepository.GetAllByQueryAsync(query);
-
+        var artists = await artistRepository.GetAllByQueryAsync(query, (page - 1) * PageSize, PageSize);
+        var albums = await albumRepository.GetAllByQueryAsync(query, (page - 1) * PageSize, PageSize);
         var songs = await songRepository.GetAllByQueryAsync(query);
 
 
@@ -56,16 +57,13 @@ public class HomeController(
             Artists = artists.Paginate(page, PageSize).ToList(),
             Albums = albums.Paginate(page, PageSize).ToList(),
             Songs = songs.Paginate(page, PageSize).ToList(),
-            PaginationViewModel = new PaginationViewModel
+            Pagination = new PaginationViewModel
             {
                 PageNumber = page,
                 PageSize = PageSize,
                 TotalItems = Math.Max(Math.Max(totalArtists, totalAlbums), totalSongs)
             }
         };
-
-        ViewBag.Pagination = model.PaginationViewModel;
-
         return View(model);
     }
 }

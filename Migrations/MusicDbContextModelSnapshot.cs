@@ -196,7 +196,8 @@ namespace Music.Migrations
                 {
                     b.HasOne("Music.Models.Artist", null)
                         .WithMany("Albums")
-                        .HasForeignKey("ArtistId");
+                        .HasForeignKey("ArtistId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Music.Models.RelationModels.UserAlbum", b =>

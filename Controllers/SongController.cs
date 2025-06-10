@@ -1,41 +1,34 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Music.Data.Repositories;
-using Music.Extensions;
+using Music.Data.Repositories.Interfaces;
 using Music.Models.Viewmodels;
 
 namespace Music.Controllers;
 
 [Authorize]
-public class SongController(MusicDbContext context) : Controller
+public class SongController(ISongRepository songRepository) : Controller
 {
     private const int PageSize = 5;
 
     public async Task<IActionResult> Index(int albumId, int page = 1)
     {
-        var album = await context.Albums
-            .AsNoTracking()
-            .Include(a => a.Songs)
-            .FirstOrDefaultAsync(a => a.Id == albumId);
-
+        var album = await songRepository.GetSongsByAlbumIdAsync(albumId, (page - 1) * PageSize, PageSize);
         if (album == null)
             return NotFound();
 
-        var totalSongs = album.Songs.Count;
-        var songsOnPage = album.Songs.Paginate(page, PageSize).ToList();
+        var totalSongs = await songRepository.GetSongCountByAlbumIdAsync(albumId);
 
-        var pagination = new PaginationViewModel
+        var model = new SongIndexViewModel
         {
-            PageNumber = page,
-            PageSize = PageSize,
-            TotalItems = totalSongs
+            Album = album,
+            Pagination = new PaginationViewModel
+            {
+                PageNumber = page,
+                PageSize = PageSize,
+                TotalItems = totalSongs
+            }
         };
 
-        ViewBag.Pagination = pagination;
-        ViewBag.AlbumId = albumId;
-
-        album.Songs = songsOnPage;
-        return View(album);
+        return View(model);
     }
 }
