@@ -7,9 +7,12 @@ using Music.Models.Viewmodels;
 namespace Music.Controllers;
 
 [Authorize]
-public class ArtistController(IArtistRepository artistRepository) : Controller
+public class ArtistController(
+    IArtistRepository artistRepository,
+    IFileRepository fileRepository) : Controller
 {
-    private const int PageSize = 5;
+    private const int PageSize = 4;
+
 
     public async Task<IActionResult> Index(int page = 1, string query = "")
     {
@@ -38,15 +41,22 @@ public class ArtistController(IArtistRepository artistRepository) : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(Artist artist)
+    public async Task<IActionResult> Create(CreateArtistViewModel createArtistViewModel)
     {
-        if (!ModelState.IsValid)
+        if (ModelState.IsValid)
         {
+            var urlImg = await fileRepository.UploadFileAsync(createArtistViewModel.File);
+            var artist = new Artist
+            {
+                Name = createArtistViewModel.Name,
+                UrlImg = urlImg,
+                Albums = new List<Album>()
+            };
             await artistRepository.AddAsync(artist);
             return RedirectToAction(nameof(Index));
         }
 
-        return View(artist);
+        return View();
     }
 
     public async Task<IActionResult> Edit(int id)
@@ -103,10 +113,7 @@ public class ArtistController(IArtistRepository artistRepository) : Controller
 
         var shuffledSongs = songs.OrderBy(s => random.Next()).ToList();
 
-        foreach (var song in shuffledSongs.Take(5))
-        {
-            randomSongs.Add(song);
-        }
+        foreach (var song in shuffledSongs.Take(5)) randomSongs.Add(song);
 
         ViewBag.RandomSongs = randomSongs;
         return View(artist);

@@ -10,7 +10,8 @@
                     <img src="@album.UrlImg" class="card-img-top" alt="...">
                     <div class="card-body">
                         <h5 class="card-title">@album.Name</h5>
-
+                        <a asp-controller="Album" asp-action="Edit" asp-route-name="@album.Name"
+                           asp-route-id="@album.Id" class="btn btn-warning">Редактировать</a>
                         @if (Model.FavouriteAlbumIds.Contains(album.Id))
                         {
                             <form asp-controller="Favourites" asp-action="RemoveAlbum" method="post">
@@ -35,6 +36,6 @@
         }
     </div>
 
-    <partial name="_Pagination" model="Model.Pagination" />
+    <partial name="_Pagination" model="Model.Pagination"/>
 
 </div>

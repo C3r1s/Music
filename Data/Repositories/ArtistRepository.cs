@@ -6,9 +6,15 @@ namespace Music.Data.Repositories;
 
 public class ArtistRepository(MusicDbContext context) : IArtistRepository
 {
-    public async Task<List<Artist>> GetAllAsync()
+    public async Task<List<Artist>> GetAllPagedAsync(int skip, int take)
     {
-        return await context.Artists.AsNoTracking().ToListAsync();
+        return await context.Artists
+            .AsNoTracking()
+            .Include(a => a.Albums) // Если нужно подгружать альбомы
+            .ThenInclude(album => album.Songs) // Или даже песни
+            .Skip(skip)
+            .Take(take)
+            .ToListAsync();
     }
 
     public async Task<Artist> GetByIdAsync(int id)
@@ -18,7 +24,7 @@ public class ArtistRepository(MusicDbContext context) : IArtistRepository
 
     public async Task AddAsync(Artist artist)
     {
-        context.Artists.Add(artist);
+        await context.Artists.AddAsync(artist);
         await context.SaveChangesAsync();
     }
 

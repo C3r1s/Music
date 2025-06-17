@@ -7,13 +7,17 @@ namespace Music.Data.Repositories;
 
 public class SongRepository(MusicDbContext context) : ISongRepository
 {
-    public async Task<List<Song>> GetAllByQueryAsync(string query)
+    public async Task<List<Song>> GetAllByQueryAsync(string query, int skip, int take)
     {
         return await context.Songs
             .Where(s => s.Name.Contains(query))
             .AsNoTracking()
+            .Include(s => s.Albums) // при необходимости
+            .Skip(skip)
+            .Take(take)
             .ToListAsync();
     }
+
 
     public async Task<Album> GetSongsByAlbumIdAsync(int albumId, int skip, int take)
     {
@@ -35,5 +39,12 @@ public class SongRepository(MusicDbContext context) : ISongRepository
             .Where(a => a.Id == albumId)
             .Select(a => a.Songs.Count)
             .FirstOrDefaultAsync();
+    }
+
+    public async Task<int> GetCountByQueryAsync(string query)
+    {
+        return await context.Songs
+            .Where(s => s.Name.Contains(query))
+            .CountAsync();
     }
 }

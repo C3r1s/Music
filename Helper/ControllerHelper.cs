@@ -8,5 +8,4 @@ public static class ControllerHelper
     {
         return typeof(T).Name.Replace("Controller", string.Empty);
     }
-    
 }

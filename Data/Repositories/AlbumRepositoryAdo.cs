@@ -15,7 +15,12 @@ public class AlbumRepositoryAdo(MusicDbContext context) : IAlbumRepository
             .Take(take)
             .ToListAsync();
     }
-    public async Task<int> GetCountAsync() => await context.Albums.CountAsync();
+
+    public async Task<int> GetCountAsync()
+    {
+        return await context.Albums.CountAsync();
+    }
+
     public async Task<Album> GetDetailsByIdAsync(int id)
     {
         var album = await context.Albums
@@ -35,5 +40,16 @@ public class AlbumRepositoryAdo(MusicDbContext context) : IAlbumRepository
             .Skip(skip)
             .Take(take)
             .ToListAsync();
+    }
+
+    public async Task UpdateAsync(Album album)
+    {
+        context.Albums.Update(album);
+        await context.SaveChangesAsync();
+    }
+
+    public Task<int> GetCountByQueryAsync(string query)
+    {
+        return context.Albums.CountAsync(a => a.Name.Contains(query));
     }
 }

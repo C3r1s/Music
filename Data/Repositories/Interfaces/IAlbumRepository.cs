@@ -8,4 +8,6 @@ public interface IAlbumRepository
     Task<Album> GetDetailsByIdAsync(int id);
     Task<int> GetCountAsync();
     Task<List<Album>> GetAllByQueryAsync(string query, int skip, int take);
+    Task UpdateAsync(Album album);
+    Task<int> GetCountByQueryAsync(string query);
 }

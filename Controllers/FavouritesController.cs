@@ -13,6 +13,7 @@ public class FavouritesController(IFavouriteRepository favouriteRepository)
     : Controller
 {
     private const int PageSize = 5;
+
     public async Task<IActionResult> Index(int page = 1)
     {
         var userId = User.GetUserId();
@@ -39,35 +40,35 @@ public class FavouritesController(IFavouriteRepository favouriteRepository)
     [HttpPost]
     public async Task<IActionResult> AddArtist(int id)
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        await favouriteRepository.AddArtistToFavourites(int.Parse(userId), id);
+        var userId = User.GetUserId();
+        await favouriteRepository.AddArtistToFavourites(userId, id);
         return RedirectToAction(nameof(HomeController.Index), ControllerHelper.GetName<HomeController>());
     }
 
     [HttpPost]
     public async Task<IActionResult> AddAlbum(int id, string returnUrl)
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var userId = User.GetUserId();
 
-        await favouriteRepository.AddAlbumToFavourites(int.Parse(userId), id);
+        await favouriteRepository.AddAlbumToFavourites(userId, id);
         return RedirectToAction(nameof(AlbumController.Index), ControllerHelper.GetName<AlbumController>());
     }
 
     [HttpPost]
     public async Task<IActionResult> RemoveAlbum(int id)
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var userId = User.GetUserId();
 
-        await favouriteRepository.RemoveAlbumFromFavourites(int.Parse(userId), id);
+        await favouriteRepository.RemoveAlbumFromFavourites(userId, id);
         return RedirectToAction(nameof(AlbumController.Index), ControllerHelper.GetName<AlbumController>());
     }
 
     [HttpPost]
     public async Task<IActionResult> RemoveArtist(int id)
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var userId = User.GetUserId();
 
-        await favouriteRepository.RemoveArtistFromFavourites(int.Parse(userId), id);
+        await favouriteRepository.RemoveArtistFromFavourites(userId, id);
         return RedirectToAction(nameof(HomeController.Index), ControllerHelper.GetName<HomeController>());
     }
 }

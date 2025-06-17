@@ -49,6 +49,7 @@ public class FavouriteRepository(MusicDbContext context) : IFavouriteRepository
             await context.SaveChangesAsync();
         }
     }
+
     public async Task<List<Artist>> GetFavouriteArtists(int userId)
     {
         return await context.UserArtists

@@ -2,7 +2,6 @@
 
 namespace Music.Extensions;
 
-
 public static class UserExtension
 {
     public static int GetUserId(this ClaimsPrincipal user)
